@@ -1,7 +1,23 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-image: url(/Content/Images/hospital.jpg);
+    background-size: 500px 500px;
+
 }
+a::before
+{
+    color:darkblue;
+}
+a:is(:hover)
+{
+    color: greenyellow;
+    text-decoration-style:double
+}
+ a::after
+ {
+     color:yellow;
+ }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {

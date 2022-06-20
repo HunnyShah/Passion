@@ -34,4 +34,8 @@ namespace Passion.Models
 
         public DateTime RegistrationDate { get; set; }
     }
+    public class DonorViewModel
+    {
+        public DonorDto DonorDto { get ; set ;}
+    }
 }

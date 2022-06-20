@@ -1,0 +1,50 @@
+﻿@model Passion.Models.DonorDto
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Donor</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DonorName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DonorName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DonorEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DonorEmail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DonorBlood)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DonorBlood)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RegistrationDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegistrationDate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.DonorID }) |
+    @Html.ActionLink("Back to List", "List")
+</p>

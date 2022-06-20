@@ -1,0 +1,56 @@
+﻿@model Passion.Models.DonorDto
+
+@{
+    ViewBag.Title = "DeleteConfirm";
+}
+
+<h2>DeleteConfirm</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Donor</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DonorName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DonorName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DonorEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DonorEmail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DonorBlood)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DonorBlood)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RegistrationDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegistrationDate)
+        </dd>
+
+    </dl>
+
+    <form action="/Donor/Delete/@Model.DonorID" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "List")
+        </div>
+    </form>
+</div>

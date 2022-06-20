@@ -1,88 +1,151 @@
-﻿using System;
+﻿using Passion.Models;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Http;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace Passion.Controllers
 {
     public class DonorController : Controller
     {
-        // GET: Donor
-        public ActionResult Index()
+        private static readonly HttpClient client;
+        
+        private JavaScriptSerializer jss = new JavaScriptSerializer();
+
+        static DonorController()
         {
-            return View();
+            HttpClientHandler handler = new HttpClientHandler()
+            {
+                AllowAutoRedirect = false,
+                //cookies are manually set in RequestHeader
+                UseCookies = false
+            };
+
+            client = new HttpClient(handler);
+            client.BaseAddress = new Uri("https://localhost:44372/api/");
+        }// GET: Donor
+        [HttpGet]
+        public ActionResult List()
+        {
+            string url = "donordata/listdonors";
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            //Debug.WriteLine("The response code is ");
+            //Debug.WriteLine(response.StatusCode);
+
+            IEnumerable<DonorDto> donors = response.Content.ReadAsAsync<IEnumerable<DonorDto>>().Result;
+            return View(donors);
         }
 
         // GET: Donor/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+
+            string url = "Donordata/findDonor/" + id;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            DonorDto Donors = response.Content.ReadAsAsync<DonorDto>().Result;
+
+            return View(Donors);
         }
 
         // GET: Donor/Create
-        public ActionResult Create()
+        [HttpGet]
+        public ActionResult New()
         {
             return View();
         }
 
         // POST: Donor/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(Donor donor)
         {
-            try
-            {
-                // TODO: Add insert logic here
+            
+            
+            //https://localhost:44324/api/donordata/adddonor 
+            string url = "donordata/adddonor";
 
-                return RedirectToAction("Index");
-            }
-            catch
+
+            string jsonpayload = jss.Serialize(donor);
+           
+
+            HttpContent content = new StringContent(jsonpayload);
+            content.Headers.ContentType.MediaType = "application/json";
+
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
+            if (response.IsSuccessStatusCode)
             {
-                return View();
+                return RedirectToAction("List");
+            }
+            else
+            {
+                return RedirectToAction("Error");
             }
         }
 
         // GET: Donor/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            string url = "Donordata/findDonor/" + id;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+
+            DonorDto Donors = response.Content.ReadAsAsync<DonorDto>().Result;
+
+            return View(Donors);
         }
 
         // POST: Donor/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public ActionResult Edit(int id, DonorDto Donor)
         {
-            try
-            {
-                // TODO: Add update logic here
+            string url = "Donordata/updateDonor/" + id;
+            string jsonpayload = jss.Serialize(Donor);
+            HttpContent content = new StringContent(jsonpayload);
+            content.Headers.ContentType.MediaType = "application/json";
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
+            Debug.WriteLine(content);
 
-                return RedirectToAction("Index");
-            }
-            catch
+            //update request is successful, and we have image data
+            if (response.IsSuccessStatusCode)
             {
-                return View();
+
+                return RedirectToAction("List");
+            }
+            else
+            {
+                return RedirectToAction("Error");
             }
         }
 
         // GET: Donor/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult DeleteConfirm(int id)
         {
-            return View();
+            string url = "Donordata/findDonor/" + id;
+            HttpResponseMessage response = client.GetAsync(url).Result;
+            DonorDto selecteddonor = response.Content.ReadAsAsync<DonorDto>().Result;
+            return View(selecteddonor);
         }
 
-        // POST: Donor/Delete/5
+        // POST: Doctor/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
+            string url = "Donordata/deleteDonor/" + id;
+            HttpContent content = new StringContent("");
+            content.Headers.ContentType.MediaType = "application/json";
+            HttpResponseMessage response = client.PostAsync(url, content).Result;
 
-                return RedirectToAction("Index");
-            }
-            catch
+            if (response.IsSuccessStatusCode)
             {
-                return View();
+                return RedirectToAction("List");
+            }
+            else
+            {
+                return RedirectToAction("Error");
             }
         }
     }
